@@ -22,6 +22,54 @@ That will create a kind cluster, install gloo-ee with the version specified in t
 
 The reproducer automatically shows you the last 20 lines of logs and takes the config_dump to show you the error here.
 
+Helm values
+
+```
+grafana:
+  defaultInstallationEnabled: false
+prometheus:
+  enabled: false
+gloo-fed:
+  glooFedApiserver:
+    enable: false
+  enabled: false
+global:
+  extensions:
+    rateLimit:
+      enabled: false
+    extAuth:
+      enabled: false
+gloo:
+  discovery:
+    enabled: false
+  settings:
+    disableKubernetesDestinations: true
+  gatewayProxies:
+    gatewayProxy:
+      podTemplate:
+        resources:
+          limits:
+            memory: 300Mi
+          requests:
+            cpu: 1
+            memory: 200Mi
+      gatewaySettings:
+        customHttpGateway:
+          options:
+            httpConnectionManagerSettings:
+              preserveExternalRequestId: true
+              tracing:
+                openTelemetryConfig:
+                  collectorUpstreamRef:
+                    name: opentelemetry-collector
+                    namespace: gloo-system
+              useRemoteAddress: true
+              uuidRequestIdConfig:
+                packTraceReason: false
+                useRequestIdForTraceSampling: false
+```
+
+
 ```
 Errors from the pod
 
